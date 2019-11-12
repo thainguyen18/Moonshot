@@ -37,4 +37,24 @@ struct Mission: Codable, Identifiable {
             return "N/A"
         }
     }
+    
+    let astronauts: [Astronaut] = Bundle.main.decode("astronauts.json")
+    
+    var crewNames: String {
+        var names = ""
+        
+        let mappedNames = self.crew.map { crew in
+            astronauts.first(where: {crew.name == $0.id})
+        }
+        
+        for i in 0 ..< mappedNames.count {
+            if i == mappedNames.count - 1{
+                names += mappedNames[i]!.name
+            } else {
+                names += mappedNames[i]!.name + ", "
+            }
+        }
+        
+        return names
+    }
 }

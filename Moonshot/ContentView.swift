@@ -14,6 +14,8 @@ struct ContentView: View {
     
     let missions: [Mission] = Bundle.main.decode("missions.json")
     
+    @State private var showingName = false
+    
     var body: some View {
         NavigationView {
         List(missions) { mission in
@@ -26,10 +28,18 @@ struct ContentView: View {
                 VStack(alignment: .leading) {
                     Text(mission.displayName)
                         .font(.headline)
-                    Text(mission.formattedLaunchDate)
+                    if self.showingName {
+                        Text(mission.crewNames)
+                    } else {
+                        Text(mission.formattedLaunchDate)
+                    }
                 }
             }
         }
+        .navigationBarTitle("Moonshot")
+        .navigationBarItems(trailing: Button("Toggle") {
+            self.showingName.toggle()
+        })
         }
     }
 }

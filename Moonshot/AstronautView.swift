@@ -11,6 +11,22 @@ import SwiftUI
 struct AstronautView: View {
     let astronaut: Astronaut
     
+    let missions: [Mission]
+    
+    init(astronaut: Astronaut, missions: [Mission]) {
+        self.astronaut = astronaut
+        
+        var matches = [Mission]()
+        
+        for mission in missions {
+            if let _ = mission.crew.first(where: {$0.name == astronaut.id}) {
+                matches.append(mission)
+            }
+        }
+        
+        self.missions = matches
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView(.vertical) {
@@ -23,6 +39,15 @@ struct AstronautView: View {
                     Text(self.astronaut.description)
                         .padding()
                     .layoutPriority(1)
+                    
+                    ForEach(self.missions) { mission in
+                        HStack {
+                            Image(mission.image)
+                            .resizable()
+                            .scaledToFit()
+                                .frame(height: 80)
+                        }
+                    }
                 }
             }
         }
@@ -32,8 +57,9 @@ struct AstronautView: View {
 
 struct AstronautView_Previews: PreviewProvider {
     static let astronauts: [Astronaut] = Bundle.main.decode("astronauts.json")
+    static let missions: [Mission] = Bundle.main.decode("missions.json")
     
     static var previews: some View {
-        AstronautView(astronaut: astronauts[1])
+        AstronautView(astronaut: astronauts[1], missions: missions)
     }
 }
